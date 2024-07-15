@@ -11,6 +11,8 @@ class NetworkApiServices extends BaseApiServices {
   @override
   Future getApi(String url, {Map<String, dynamic>? params}) async {
     dynamic responseJson;
+    log(params as String);
+
     try {
       final response = await dio.get(url, queryParameters: params);
       if (response.statusCode == 200) {
@@ -19,12 +21,13 @@ class NetworkApiServices extends BaseApiServices {
         throw Exception(
             "Error occurred while communicating with API: ${response.statusCode}");
       }
+      log(response.statusCode.toString());
       if (kDebugMode) {
         log(response.statusCode.toString());
         log(response.data);
       }
     } catch (e) {
-      throw e;
+      // throw Exception(e);
     }
 
     return responseJson;

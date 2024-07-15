@@ -23,6 +23,7 @@ class MainApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomeBloc(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: HomePage(),
         builder: (context, child) {
           return MediaQuery(

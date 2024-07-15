@@ -9,11 +9,9 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  //load list
-
   List<UserListModel> _userList = [];
 
-  HomeBloc() : super(HomeInitial()) {
+  HomeBloc() : super(HomeInitialState()) {
     on<HomeInitialEvent>(fetchLists);
   }
 }
@@ -22,5 +20,9 @@ FutureOr<void> fetchLists(
     HomeInitialEvent event, Emitter<HomeState> emit) async {
   final _api = HomeRepository();
   Map<String, dynamic> params = {'page': event.page_id};
-  _api.getUserList(params).then((value) => {print(value)});
+  try {
+    _api.getUserList(params) /* .then((value) => {print(value)}) */;
+  } catch (e) {
+    print(e);
+  }
 }
