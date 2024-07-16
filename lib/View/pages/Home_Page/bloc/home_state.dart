@@ -16,6 +16,8 @@ final class ContentLoadingState extends HomeState {
 
 final class ErrorState extends HomeState {}
 
+final class NoInternetState extends HomeState {}
+
 final class UserListLoadedSuccessState extends HomeState {
   final List<UserListModel> userList;
   final bool maxReached;

@@ -11,6 +11,7 @@ import 'package:impacteers/View/pages/Home_Page/bloc/home_bloc.dart';
 import 'package:impacteers/View/pages/User_Details_Page/user_details.dart';
 import 'package:impacteers/res/colors.dart';
 import 'package:impacteers/res/constant.dart';
+import 'package:impacteers/res/image_path.dart';
 import 'package:impacteers/res/strings.dart';
 
 class HomePage extends StatefulWidget {
@@ -61,8 +62,81 @@ class _HomePageState extends State<HomePage> {
           listenWhen: (previous, current) => current is HomeActionState,
           buildWhen: (previous, current) => current is! HomeActionState,
           builder: (context, state) {
-            if (state is ErrorState) {
-              return Center(child: Text("Error"));
+            if (state is ErrorState || state is NoInternetState) {
+              String img_path = '';
+              String msg = '';
+              if (state is ErrorState) {
+                img_path = ImagePath.error;
+                msg = AppStrings.error_msg;
+              } else {
+                img_path = ImagePath.no_internet;
+                msg = AppStrings.no_internet;
+              }
+              return Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height -
+                    AppConstants.appBarHeight,
+                padding: EdgeInsets.only(bottom: AppConstants.appBarHeight),
+                decoration: BoxDecoration(
+                  color: AppColors.whiteLite,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(75),
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      img_path,
+                      width: AppConstants.screenWidth * 0.8,
+                      height: AppConstants.screenWidth * 0.8,
+                      fit: BoxFit.cover,
+                      filterQuality: FilterQuality.high,
+                    ),
+                    SizedBox(
+                      height: AppConstants.screenHeight * 0.05,
+                    ),
+                    Text(
+                      msg,
+                      style: TextStyle(
+                        fontSize: 25,
+                        color: AppColors.textColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    if (state is NoInternetState)
+                      Container(
+                        margin: EdgeInsets.only(
+                            top: AppConstants.screenHeight * 0.05),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              page_id = 1;
+                            });
+                            homeBloc.add(HomeInitialEvent(page_id: page_id));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.colorPrimaryLite,
+                            minimumSize: Size(150, 50),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            elevation: 4,
+                          ),
+                          child: Text(
+                            'Try Again!',
+                            style: TextStyle(
+                              color: AppColors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      )
+                  ],
+                ),
+              );
             } else if (state is UserListLoadedSuccessState ||
                 state is ShowProgressState ||
                 state is ContentLoadingState) {

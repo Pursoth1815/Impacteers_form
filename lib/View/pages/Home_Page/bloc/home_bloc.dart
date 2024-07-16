@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:impacteers/Controller/Repository/home_repo/home_repo.dart';
 import 'package:impacteers/Model/Home_model/user_list_model.dart';
+import 'package:impacteers/Utils/utils.dart';
 import 'package:meta/meta.dart';
 
 part 'home_event.dart';
@@ -26,12 +27,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     UserListModel model;
 
     try {
-      final response = await _api.getUserDetails(event.selectedUser.id);
-      data = response["data"];
+      if (await Utils().checkInternetConnection()) {
+        final response = await _api.getUserDetails(event.selectedUser.id);
+        data = response["data"];
 
-      model = UserListModel.fromMap(data);
+        model = UserListModel.fromMap(data);
 
-      emit(NavigateUserDetailsState(selectedUser: model));
+        emit(NavigateUserDetailsState(selectedUser: model));
+      } else {
+        emit(NoInternetState());
+      }
     } catch (e) {
       emit(ErrorState());
       throw Exception(e);
@@ -48,21 +53,32 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     );
     List<dynamic> data;
 
-    Map<String, dynamic> params = {'page': event.page_id.toString()};
+    String page_id = '';
+
+    if (_userList.isEmpty)
+      page_id = '1';
+    else
+      page_id = event.page_id.toString();
+
+    Map<String, dynamic> params = {'page': page_id};
 
     try {
       if (_userList.length < maxCount) {
-        final response = await _api.getUserList(params);
-        data = response["data"];
-        maxCount = response["total"];
+        if (await Utils().checkInternetConnection()) {
+          final response = await _api.getUserList(params);
+          data = response["data"];
+          maxCount = response["total"];
 
-        if (data.isNotEmpty)
-          _userList.addAll(data
-              .map<UserListModel>((element) => UserListModel.fromMap(element))
-              .toList());
+          if (data.isNotEmpty)
+            _userList.addAll(data
+                .map<UserListModel>((element) => UserListModel.fromMap(element))
+                .toList());
 
-        emit(UserListLoadedSuccessState(
-            userList: _userList, maxReached: _userList.length < maxCount));
+          emit(UserListLoadedSuccessState(
+              userList: _userList, maxReached: _userList.length < maxCount));
+        } else {
+          emit(NoInternetState());
+        }
       }
     } catch (e) {
       emit(ErrorState());
@@ -78,24 +94,35 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       Duration(seconds: 1),
     );
 
-    List<dynamic> data;
+    if (await Utils().checkInternetConnection()) {
+      List<dynamic> data;
 
-    Map<String, dynamic> params = {'page': event.page_id.toString()};
+      String page_id = '';
 
-    try {
-      final response = await _api.getUserList(params);
-      data = response["data"];
-      maxCount = response["total"];
+      if (_userList.isEmpty)
+        page_id = '1';
+      else
+        page_id = event.page_id.toString();
 
-      _userList = data
-          .map<UserListModel>((element) => UserListModel.fromMap(element))
-          .toList();
+      Map<String, dynamic> params = {'page': page_id};
 
-      emit(UserListLoadedSuccessState(
-          userList: _userList, maxReached: _userList.length < maxCount));
-    } catch (e) {
-      emit(ErrorState());
-      throw Exception(e);
+      try {
+        final response = await _api.getUserList(params);
+        data = response["data"];
+        maxCount = response["total"];
+
+        _userList = data
+            .map<UserListModel>((element) => UserListModel.fromMap(element))
+            .toList();
+
+        emit(UserListLoadedSuccessState(
+            userList: _userList, maxReached: _userList.length < maxCount));
+      } catch (e) {
+        emit(ErrorState());
+        throw Exception(e);
+      }
+    } else {
+      emit(NoInternetState());
     }
   }
 

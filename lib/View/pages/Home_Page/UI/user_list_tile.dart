@@ -46,6 +46,7 @@ class User_List_Tile extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(30)),
                       child: Image.network(
                         userList.avatar,
+                        filterQuality: FilterQuality.high,
                         fit: BoxFit.cover,
                       ),
                     ),
