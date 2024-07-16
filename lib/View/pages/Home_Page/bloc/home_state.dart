@@ -15,6 +15,6 @@ final class UserListLoadedSuccessState extends HomeState {
 }
 
 final class NavigateUserDetailsState extends HomeActionState {
-  final UserListModel userList;
-  NavigateUserDetailsState({required this.userList});
+  final UserListModel selectedUser;
+  NavigateUserDetailsState({required this.selectedUser});
 }

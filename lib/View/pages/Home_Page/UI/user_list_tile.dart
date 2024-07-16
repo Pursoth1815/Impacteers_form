@@ -53,9 +53,10 @@ class User_List_Tile extends StatelessWidget {
                 ),
                 Expanded(
                   child: Container(
-                    margin: EdgeInsets.only(top: 18, left: 15),
+                    margin: EdgeInsets.only(left: 15),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           userList.first_name,
@@ -74,8 +75,7 @@ class User_List_Tile extends StatelessWidget {
                             color: Colors.black38,
                           ),
                         ),
-                        Spacer(),
-                        Row(
+                        /* Row(
                           children: [
                             Icon(
                               Icons.email,
@@ -94,7 +94,7 @@ class User_List_Tile extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Spacer()
+                        Spacer() */
                       ],
                     ),
                   ),
