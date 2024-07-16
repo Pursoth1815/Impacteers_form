@@ -6,4 +6,6 @@ class AppStrings {
   static const String searchUser = "Search User";
 
   static const String search = "search...";
+
+  static const String emp_code = "Employee Code";
 }

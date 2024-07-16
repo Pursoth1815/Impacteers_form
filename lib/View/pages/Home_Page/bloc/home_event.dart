@@ -4,8 +4,13 @@ part of 'home_bloc.dart';
 sealed class HomeEvent {}
 
 class HomeInitialEvent extends HomeEvent {
-  final String page_id;
+  final int page_id;
   HomeInitialEvent({required this.page_id});
+}
+
+class AddUsersEvent extends HomeEvent {
+  final int page_id;
+  AddUsersEvent({required this.page_id});
 }
 
 class UserSearchEvent extends HomeEvent {

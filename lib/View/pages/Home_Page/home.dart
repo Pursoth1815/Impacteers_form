@@ -1,5 +1,7 @@
 // ignore_for_file: constant_pattern_never_matches_value_type
 
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,12 +24,30 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final HomeBloc homeBloc = HomeBloc();
-  String page_id = '1';
+  int page_id = 1;
+  final ScrollController _scrollController = ScrollController();
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     homeBloc.add(HomeInitialEvent(page_id: page_id));
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !isLoading) {
+      setState(() {
+        page_id = page_id + 1;
+        homeBloc.add(AddUsersEvent(page_id: page_id));
+      });
+    }
   }
 
   @override
@@ -110,6 +130,7 @@ class _HomePageState extends State<HomePage> {
       title: Text(
         AppStrings.appName.toUpperCase(),
         style: TextStyle(
+          fontFamily: 'SFPro',
           wordSpacing: 8,
           letterSpacing: 4,
           fontSize: 18,
@@ -126,6 +147,7 @@ class _HomePageState extends State<HomePage> {
         Text(
           AppStrings.searchUser,
           style: TextStyle(
+            fontFamily: 'SFPro',
             fontSize: 20,
             color: Colors.black,
             fontWeight: FontWeight.w500,
@@ -170,6 +192,7 @@ class _HomePageState extends State<HomePage> {
         ? ShimmerCard()
         : Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               shrinkWrap: false,
               itemCount: userLists.length,
               itemBuilder: (context, index) {

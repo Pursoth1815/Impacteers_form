@@ -20,3 +20,10 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+  
+  fonts:
+    - family: SFPRO
+      fonts:
+        - asset: fonts/SFPRODISPLAYBOLD.OTF
+        - asset: fonts/SFPRODISPLAYMEDIUM.OTF
+        - asset: fonts/SFPRODISPLAYREGULAR.OTF

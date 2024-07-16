@@ -75,26 +75,6 @@ class User_List_Tile extends StatelessWidget {
                             color: Colors.black38,
                           ),
                         ),
-                        /* Row(
-                          children: [
-                            Icon(
-                              Icons.email,
-                              size: 16,
-                              color: AppColors.green,
-                            ),
-                            SizedBox(width: 8), // Adjust the space between the icon and text as needed
-                            Text(
-                              userList.email,
-                              style: TextStyle(
-                                fontSize: 11,
-                                decoration: TextDecoration.none,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.green,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Spacer() */
                       ],
                     ),
                   ),

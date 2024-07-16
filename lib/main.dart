@@ -25,6 +25,9 @@ class MainApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: HomePage(),
+        theme: ThemeData(
+          fontFamily: 'SFPRO',
+        ),
         builder: (context, child) {
           return MediaQuery(
             child: child!,

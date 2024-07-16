@@ -16,11 +16,31 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(ShowProgressState()) {
     on<HomeInitialEvent>(fetchLists);
     on<UserSearchEvent>(filterUserList);
+    on<AddUsersEvent>(addUserList);
     on<GoToDetailsEvent>(
       (event, emit) {
         emit(NavigateUserDetailsState(selectedUser: event.selectedUser));
       },
     );
+  }
+
+  FutureOr<void> addUserList(AddUsersEvent event, Emitter<HomeState> emit) async {
+    List<dynamic> data;
+
+    Map<String, dynamic> params = {'page': event.page_id.toString()};
+
+    try {
+      final response = await _api.getUserList(params);
+      data = response["data"];
+
+      if (data.isNotEmpty) _userList.addAll(data.map<UserListModel>((element) => UserListModel.fromMap(element)).toList());
+
+      emit(UserListLoadedSuccessState(userList: _userList));
+    } catch (e) {
+      log("$e");
+      emit(ErrorState());
+      throw Exception(e);
+    }
   }
 
   FutureOr<void> fetchLists(HomeInitialEvent event, Emitter<HomeState> emit) async {
@@ -32,12 +52,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     List<dynamic> data;
 
-    Map<String, dynamic> params = {'page': event.page_id};
+    Map<String, dynamic> params = {'page': event.page_id.toString()};
 
     try {
       final response = await _api.getUserList(params);
       data = response["data"];
+
       _userList = data.map<UserListModel>((element) => UserListModel.fromMap(element)).toList();
+
       emit(UserListLoadedSuccessState(userList: _userList));
     } catch (e) {
       log("$e");
