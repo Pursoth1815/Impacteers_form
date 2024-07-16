@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:impacteers/Controller/Repository/home_repo/home_repo.dart';
@@ -9,20 +10,41 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  List<UserListModel> _userList = [];
-
-  HomeBloc() : super(HomeInitialState()) {
+  HomeBloc() : super(ShowProgressState()) {
     on<HomeInitialEvent>(fetchLists);
+    on<GoToDetailsEvent>(
+      (event, emit) {
+        emit(NavigateUserDetailsState(userList: event.selectedUser));
+      },
+    );
   }
 }
 
-FutureOr<void> fetchLists(
-    HomeInitialEvent event, Emitter<HomeState> emit) async {
-  final _api = HomeRepository();
+FutureOr<void> fetchLists(HomeInitialEvent event, Emitter<HomeState> emit) async {
+  emit(ShowProgressState());
+
+  List<dynamic> data;
+  List<UserListModel> _userList = [];
+
+  final HomeRepository _api = HomeRepository();
   Map<String, dynamic> params = {'page': event.page_id};
+
   try {
-    _api.getUserList(params) /* .then((value) => {print(value)}) */;
+    await _api.getUserList(params).then(
+          (value) => {
+            data = value["data"],
+            data.forEach(
+              (element) {
+                _userList.add(UserListModel.fromMap(element));
+              },
+            )
+          },
+        );
+
+    emit(UserListLoadedSuccessState(userList: _userList));
   } catch (e) {
-    print(e);
+    log("$e");
+    emit(ErrorState());
+    throw Exception(e);
   }
 }

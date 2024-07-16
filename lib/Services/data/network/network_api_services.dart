@@ -11,23 +11,20 @@ class NetworkApiServices extends BaseApiServices {
   @override
   Future getApi(String url, {Map<String, dynamic>? params}) async {
     dynamic responseJson;
-    log(params as String);
 
     try {
       final response = await dio.get(url, queryParameters: params);
       if (response.statusCode == 200) {
-        responseJson = jsonDecode(response.data);
+        if (kDebugMode) {
+          log(response.statusCode.toString());
+          log("${response.data}");
+        }
+        responseJson = response.data;
       } else {
-        throw Exception(
-            "Error occurred while communicating with API: ${response.statusCode}");
-      }
-      log(response.statusCode.toString());
-      if (kDebugMode) {
-        log(response.statusCode.toString());
-        log(response.data);
+        throw Exception("Error occurred while communicating with API: ${response.statusCode}");
       }
     } catch (e) {
-      // throw Exception(e);
+      throw Exception(e);
     }
 
     return responseJson;

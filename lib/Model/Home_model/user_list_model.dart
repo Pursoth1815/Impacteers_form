@@ -43,18 +43,17 @@ class UserListModel {
 
   factory UserListModel.fromMap(Map<String, dynamic> map) {
     return UserListModel(
-      id: map['id'] as String,
-      email: map['email'] as String,
-      first_name: map['first_name'] as String,
-      last_name: map['last_name'] as String,
-      avatar: map['avatar'] as String,
+      id: map['id'].toString(),
+      email: map['email'].toString(),
+      first_name: map['first_name'].toString(),
+      last_name: map['last_name'].toString(),
+      avatar: map['avatar'].toString(),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory UserListModel.fromJson(String source) =>
-      UserListModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory UserListModel.fromJson(String source) => UserListModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -65,19 +64,11 @@ class UserListModel {
   bool operator ==(covariant UserListModel other) {
     if (identical(this, other)) return true;
 
-    return other.id == id &&
-        other.email == email &&
-        other.first_name == first_name &&
-        other.last_name == last_name &&
-        other.avatar == avatar;
+    return other.id == id && other.email == email && other.first_name == first_name && other.last_name == last_name && other.avatar == avatar;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^
-        email.hashCode ^
-        first_name.hashCode ^
-        last_name.hashCode ^
-        avatar.hashCode;
+    return id.hashCode ^ email.hashCode ^ first_name.hashCode ^ last_name.hashCode ^ avatar.hashCode;
   }
 }

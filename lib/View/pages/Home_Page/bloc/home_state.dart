@@ -5,14 +5,16 @@ sealed class HomeState {}
 
 final class HomeActionState extends HomeState {}
 
-final class HomeInitialState extends HomeState {}
+final class ShowProgressState extends HomeState {}
 
-final class UserListLoddedSuccessState extends HomeState {
+final class ErrorState extends HomeState {}
+
+final class UserListLoadedSuccessState extends HomeState {
   final List<UserListModel> userList;
-  UserListLoddedSuccessState({required this.userList});
+  UserListLoadedSuccessState({required this.userList});
 }
 
-final class GoToUserDetailsState extends HomeActionState {
+final class NavigateUserDetailsState extends HomeActionState {
   final UserListModel userList;
-  GoToUserDetailsState({required this.userList});
+  NavigateUserDetailsState({required this.userList});
 }

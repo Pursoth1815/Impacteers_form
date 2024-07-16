@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:impacteers/View/pages/Home_Page/UI/home.dart';
+import 'package:impacteers/View/pages/Home_Page/home.dart';
 import 'package:impacteers/View/pages/Home_Page/bloc/home_bloc.dart';
 import 'package:impacteers/res/constant.dart';
 
@@ -28,8 +28,7 @@ class MainApp extends StatelessWidget {
         builder: (context, child) {
           return MediaQuery(
             child: child!,
-            data: MediaQuery.of(context)
-                .copyWith(textScaler: TextScaler.linear(1.0)),
+            data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(1.0)),
           );
         },
       ),
