@@ -1,15 +1,13 @@
 // ignore_for_file: constant_pattern_never_matches_value_type
 
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:impacteers/Model/Home_model/user_list_model.dart';
 import 'package:impacteers/View/components/shimmer.dart';
 import 'package:impacteers/View/components/shimmer_card.dart';
-import 'package:impacteers/View/pages/Home_Page/bloc/home_bloc.dart';
 import 'package:impacteers/View/pages/Home_Page/UI/user_list_tile.dart';
+import 'package:impacteers/View/pages/Home_Page/bloc/home_bloc.dart';
 import 'package:impacteers/View/pages/User_Details_Page/user_details.dart';
 import 'package:impacteers/res/colors.dart';
 import 'package:impacteers/res/constant.dart';
@@ -42,7 +40,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !isLoading) {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !isLoading) {
       setState(() {
         page_id = page_id + 1;
         homeBloc.add(AddUsersEvent(page_id: page_id));
@@ -63,7 +63,9 @@ class _HomePageState extends State<HomePage> {
           builder: (context, state) {
             if (state is ErrorState) {
               return Center(child: Text("Error"));
-            } else if (state is UserListLoadedSuccessState || state is ShowProgressState || state is ContentLoadingState) {
+            } else if (state is UserListLoadedSuccessState ||
+                state is ShowProgressState ||
+                state is ContentLoadingState) {
               List<UserListModel> userLists = [];
               bool shimmer = false;
               bool loader = false;
@@ -79,7 +81,8 @@ class _HomePageState extends State<HomePage> {
 
               return Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height - AppConstants.appBarHeight,
+                height: MediaQuery.of(context).size.height -
+                    AppConstants.appBarHeight,
                 margin: EdgeInsets.only(top: 20),
                 decoration: BoxDecoration(
                   color: AppColors.whiteLite,
@@ -88,7 +91,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -151,7 +155,6 @@ class _HomePageState extends State<HomePage> {
         Text(
           AppStrings.searchUser,
           style: TextStyle(
-            fontFamily: 'SFPro',
             fontSize: 20,
             color: Colors.black,
             fontWeight: FontWeight.w500,
@@ -184,7 +187,8 @@ class _HomePageState extends State<HomePage> {
             ),
             fillColor: AppColors.white,
             filled: true,
-            contentPadding: EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
+            contentPadding:
+                EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
           ),
         ),
       ],

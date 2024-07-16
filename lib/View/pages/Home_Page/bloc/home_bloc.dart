@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:impacteers/Controller/Repository/home_repo/home_repo.dart';
@@ -18,15 +17,31 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeInitialEvent>(fetchLists);
     on<UserSearchEvent>(filterUserList);
     on<AddUsersEvent>(addUserList);
-    on<GoToDetailsEvent>(
-      (event, emit) {
-        emit(NavigateUserDetailsState(selectedUser: event.selectedUser));
-      },
-    );
+    on<GoToDetailsEvent>(fetchUserDetails);
   }
 
-  FutureOr<void> addUserList(AddUsersEvent event, Emitter<HomeState> emit) async {
-    emit(ContentLoadingState(userList: _userList, maxReached: _userList.length < maxCount));
+  FutureOr<void> fetchUserDetails(
+      GoToDetailsEvent event, Emitter<HomeState> emit) async {
+    Map<String, dynamic> data;
+    UserListModel model;
+
+    try {
+      final response = await _api.getUserDetails(event.selectedUser.id);
+      data = response["data"];
+
+      model = UserListModel.fromMap(data);
+
+      emit(NavigateUserDetailsState(selectedUser: model));
+    } catch (e) {
+      emit(ErrorState());
+      throw Exception(e);
+    }
+  }
+
+  FutureOr<void> addUserList(
+      AddUsersEvent event, Emitter<HomeState> emit) async {
+    emit(ContentLoadingState(
+        userList: _userList, maxReached: _userList.length < maxCount));
 
     await Future.delayed(
       Duration(seconds: 1),
@@ -36,21 +51,27 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Map<String, dynamic> params = {'page': event.page_id.toString()};
 
     try {
-      final response = await _api.getUserList(params);
-      data = response["data"];
-      maxCount = response["total"];
+      if (_userList.length < maxCount) {
+        final response = await _api.getUserList(params);
+        data = response["data"];
+        maxCount = response["total"];
 
-      if (data.isNotEmpty) _userList.addAll(data.map<UserListModel>((element) => UserListModel.fromMap(element)).toList());
+        if (data.isNotEmpty)
+          _userList.addAll(data
+              .map<UserListModel>((element) => UserListModel.fromMap(element))
+              .toList());
 
-      emit(UserListLoadedSuccessState(userList: _userList, maxReached: _userList.length < maxCount));
+        emit(UserListLoadedSuccessState(
+            userList: _userList, maxReached: _userList.length < maxCount));
+      }
     } catch (e) {
-      log("$e");
       emit(ErrorState());
       throw Exception(e);
     }
   }
 
-  FutureOr<void> fetchLists(HomeInitialEvent event, Emitter<HomeState> emit) async {
+  FutureOr<void> fetchLists(
+      HomeInitialEvent event, Emitter<HomeState> emit) async {
     emit(ShowProgressState());
 
     await Future.delayed(
@@ -66,23 +87,31 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       data = response["data"];
       maxCount = response["total"];
 
-      _userList = data.map<UserListModel>((element) => UserListModel.fromMap(element)).toList();
+      _userList = data
+          .map<UserListModel>((element) => UserListModel.fromMap(element))
+          .toList();
 
-      emit(UserListLoadedSuccessState(userList: _userList, maxReached: _userList.length < maxCount));
+      emit(UserListLoadedSuccessState(
+          userList: _userList, maxReached: _userList.length < maxCount));
     } catch (e) {
-      log("$e");
       emit(ErrorState());
       throw Exception(e);
     }
   }
 
-  FutureOr<void> filterUserList(UserSearchEvent event, Emitter<HomeState> emit) async {
+  FutureOr<void> filterUserList(
+      UserSearchEvent event, Emitter<HomeState> emit) async {
     List<UserListModel> _filterList = [];
-
     if (event.searchQuery.isNotEmpty) {
       _filterList = _userList.where((element) {
-        return element.first_name.toLowerCase().contains(event.searchQuery) || element.last_name.toLowerCase().contains(event.searchQuery);
+        return element.first_name
+                .toLowerCase()
+                .contains(event.searchQuery.toLowerCase()) ||
+            element.last_name
+                .toLowerCase()
+                .contains(event.searchQuery.toLowerCase());
       }).toList();
+
       emit(UserListLoadedSuccessState(userList: _filterList));
     } else {
       emit(UserListLoadedSuccessState(userList: _userList));

@@ -13,10 +13,13 @@ class UserDetails extends StatefulWidget {
   State<UserDetails> createState() => _UserDetailsState();
 }
 
-class _UserDetailsState extends State<UserDetails> with TickerProviderStateMixin {
-  late AnimationController cardPosController = AnimationController(vsync: this, duration: Duration(milliseconds: 700));
+class _UserDetailsState extends State<UserDetails>
+    with TickerProviderStateMixin {
+  late AnimationController cardPosController =
+      AnimationController(vsync: this, duration: Duration(milliseconds: 700));
 
-  late Animation<double> cardPosAnimation = CurvedAnimation(parent: cardPosController, curve: Interval(0.0, 1));
+  late Animation<double> cardPosAnimation =
+      CurvedAnimation(parent: cardPosController, curve: Interval(0.0, 1));
 
   @override
   void initState() {
@@ -68,7 +71,8 @@ class _UserDetailsState extends State<UserDetails> with TickerProviderStateMixin
                   child: Container(
                     width: AppConstants.screenWidth,
                     height: AppConstants.screenHeight * 0.6,
-                    padding: EdgeInsets.symmetric(horizontal: AppConstants.screenWidth * 0.05),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: AppConstants.screenWidth * 0.05),
                     decoration: BoxDecoration(
                       color: AppColors.whiteLite,
                       borderRadius: BorderRadius.vertical(
@@ -105,9 +109,9 @@ class _UserDetailsState extends State<UserDetails> with TickerProviderStateMixin
       alignment: Alignment.topCenter,
       children: [
         AnimatedPositioned(
-          duration: Duration(milliseconds: 700),
+          duration: Duration(milliseconds: 500),
           top: AppConstants.screenHeight * 0.05,
-          right: AppConstants.screenWidth / 3 * cardPosAnimation.value,
+          right: AppConstants.screenWidth / 2.8 * cardPosAnimation.value,
           child: Opacity(
             opacity: cardPosAnimation.value,
             child: Column(
@@ -116,7 +120,8 @@ class _UserDetailsState extends State<UserDetails> with TickerProviderStateMixin
                 Container(
                   width: 50,
                   height: 50,
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.white),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: AppColors.white),
                   child: Center(
                     child: Text(
                       list.id,
@@ -144,18 +149,14 @@ class _UserDetailsState extends State<UserDetails> with TickerProviderStateMixin
           ),
         ),
         Positioned(
-          top: AppConstants.screenHeight * 0.15,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Divider(
-              color: AppColors.colorPrimaryLite,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Divider(
-            color: AppColors.colorPrimaryLite,
+          left: 0,
+          top: AppConstants.screenHeight * 0.16,
+          child: Container(
+            width: AppConstants.screenWidth,
+            height: 3,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: AppColors.colorPrimaryLite),
           ),
         ),
 
@@ -170,7 +171,8 @@ class _UserDetailsState extends State<UserDetails> with TickerProviderStateMixin
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 15.0),
-                  child: CircleAvatar(radius: 30, backgroundImage: NetworkImage(list.avatar)),
+                  child: CircleAvatar(
+                      radius: 30, backgroundImage: NetworkImage(list.avatar)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
@@ -212,7 +214,7 @@ class _UserDetailsState extends State<UserDetails> with TickerProviderStateMixin
                   size: 16,
                   color: AppColors.green,
                 ),
-                SizedBox(width: 8), // Adjust the space between the icon and text as needed
+                SizedBox(width: 8),
                 Text(
                   list.email,
                   style: TextStyle(
@@ -228,6 +230,7 @@ class _UserDetailsState extends State<UserDetails> with TickerProviderStateMixin
         ),
         Positioned(
           left: 0,
+          right: 0,
           top: AppConstants.screenHeight * 0.3,
           child: Container(
             margin: EdgeInsets.only(top: 15),

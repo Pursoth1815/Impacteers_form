@@ -14,4 +14,15 @@ class HomeRepository {
 
     return response;
   }
+
+  Future<dynamic> getUserDetails(String id) async {
+    dynamic response;
+    try {
+      response = await _apiServices.getApi("${AppStrings.baseURL}/$id");
+    } catch (e) {
+      throw Exception(e);
+    }
+
+    return response;
+  }
 }
