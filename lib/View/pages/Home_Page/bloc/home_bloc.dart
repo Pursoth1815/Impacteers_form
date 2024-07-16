@@ -12,6 +12,7 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomeRepository _api = HomeRepository();
   List<UserListModel> _userList = [];
+  int maxCount = 0;
 
   HomeBloc() : super(ShowProgressState()) {
     on<HomeInitialEvent>(fetchLists);
@@ -25,6 +26,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   FutureOr<void> addUserList(AddUsersEvent event, Emitter<HomeState> emit) async {
+    emit(ContentLoadingState(userList: _userList, maxReached: _userList.length < maxCount));
+
+    await Future.delayed(
+      Duration(seconds: 1),
+    );
     List<dynamic> data;
 
     Map<String, dynamic> params = {'page': event.page_id.toString()};
@@ -32,10 +38,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       final response = await _api.getUserList(params);
       data = response["data"];
+      maxCount = response["total"];
 
       if (data.isNotEmpty) _userList.addAll(data.map<UserListModel>((element) => UserListModel.fromMap(element)).toList());
 
-      emit(UserListLoadedSuccessState(userList: _userList));
+      emit(UserListLoadedSuccessState(userList: _userList, maxReached: _userList.length < maxCount));
     } catch (e) {
       log("$e");
       emit(ErrorState());
@@ -57,10 +64,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       final response = await _api.getUserList(params);
       data = response["data"];
+      maxCount = response["total"];
 
       _userList = data.map<UserListModel>((element) => UserListModel.fromMap(element)).toList();
 
-      emit(UserListLoadedSuccessState(userList: _userList));
+      emit(UserListLoadedSuccessState(userList: _userList, maxReached: _userList.length < maxCount));
     } catch (e) {
       log("$e");
       emit(ErrorState());

@@ -63,12 +63,16 @@ class _HomePageState extends State<HomePage> {
           builder: (context, state) {
             if (state is ErrorState) {
               return Center(child: Text("Error"));
-            } else if (state is UserListLoadedSuccessState || state is ShowProgressState) {
+            } else if (state is UserListLoadedSuccessState || state is ShowProgressState || state is ContentLoadingState) {
               List<UserListModel> userLists = [];
               bool shimmer = false;
+              bool loader = false;
 
               if (state is UserListLoadedSuccessState) {
                 userLists = state.userList;
+              } else if (state is ContentLoadingState) {
+                userLists = state.userList;
+                loader = state.maxReached;
               } else {
                 shimmer = true;
               }
@@ -90,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       _searchContent(userLists),
                       SizedBox(height: 30),
-                      _UserList(userLists, shimmer),
+                      _UserList(userLists, shimmer, loader),
                     ],
                   ),
                 ),
@@ -187,24 +191,31 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _UserList(List<UserListModel> userLists, bool flag) {
+  Widget _UserList(List<UserListModel> userLists, bool flag, bool loader) {
     return flag
         ? ShimmerCard()
         : Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              shrinkWrap: false,
-              itemCount: userLists.length,
-              itemBuilder: (context, index) {
-                UserListModel item = userLists[index];
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: User_List_Tile(
-                    bloc: homeBloc,
-                    userList: item,
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    shrinkWrap: false,
+                    itemCount: userLists.length,
+                    itemBuilder: (context, index) {
+                      UserListModel item = userLists[index];
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: User_List_Tile(
+                          bloc: homeBloc,
+                          userList: item,
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+                if (loader) CircularProgressIndicator()
+              ],
             ),
           );
   }
