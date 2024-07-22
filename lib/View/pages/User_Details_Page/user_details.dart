@@ -111,7 +111,7 @@ class _UserDetailsState extends State<UserDetails>
         AnimatedPositioned(
           duration: Duration(milliseconds: 500),
           top: AppConstants.screenHeight * 0.05,
-          right: AppConstants.screenWidth / 2.8 * cardPosAnimation.value,
+          right: AppConstants.screenWidth / 3 * cardPosAnimation.value,
           child: Opacity(
             opacity: cardPosAnimation.value,
             child: Column(
@@ -150,7 +150,7 @@ class _UserDetailsState extends State<UserDetails>
         ),
         Positioned(
           left: 0,
-          top: AppConstants.screenHeight * 0.16,
+          top: AppConstants.screenHeight * 0.19,
           child: Container(
             width: AppConstants.screenWidth,
             height: 3,
@@ -162,7 +162,7 @@ class _UserDetailsState extends State<UserDetails>
 
         // Owner Details Content
         Positioned(
-          top: AppConstants.screenHeight * 0.18,
+          top: AppConstants.screenHeight * 0.2,
           left: 0,
           child: Container(
             margin: EdgeInsets.only(top: 10),
@@ -204,7 +204,7 @@ class _UserDetailsState extends State<UserDetails>
 
         Positioned(
           left: 0,
-          top: AppConstants.screenHeight * 0.25,
+          top: AppConstants.screenHeight * 0.28,
           child: Container(
             margin: EdgeInsets.only(top: 20),
             child: Row(
@@ -231,7 +231,7 @@ class _UserDetailsState extends State<UserDetails>
         Positioned(
           left: 0,
           right: 0,
-          top: AppConstants.screenHeight * 0.3,
+          top: AppConstants.screenHeight * 0.32,
           child: Container(
             margin: EdgeInsets.only(top: 15),
             child: Text(
